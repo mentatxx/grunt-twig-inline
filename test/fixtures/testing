@@ -1,0 +1,17 @@
+{% extends "_common.twig" %}
+
+{% set seoTitle = 'Contact information' %}
+{% set seoKeywords = 'contacts' %}
+{% set seoDescription = 'Contact information' %}
+{% set tab = 3 %}
+
+{% block content %}
+    <section class="contacts">
+        <div class="container">
+            <div class="row">
+            </div>
+        </div>
+    </section>
+    <div class="common-fade"></div>
+{% endblock %}
+

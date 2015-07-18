@@ -1,0 +1,14 @@
+{% extends "_common.twig" %}
+
+{% set seoTitle = 'Page not found' %}
+{% set seoKeywords = '404, page not found' %}
+{% set seoDescription = 'Page not found try another' %}
+
+{% block content %}
+<div class="container-fluid">
+<h1>Page not found</h1>
+<p>Try start <a href="/">page</a></p>
+<p><a href="/" class="btn btn-primary btn-large">Go</a></p>
+</div>
+{% endblock %}
+
