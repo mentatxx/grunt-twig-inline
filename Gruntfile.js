@@ -40,7 +40,8 @@ module.exports = function(grunt) {
       custom_options: {
         options: {
           variablePrefix: 'twig',
-          pathPrefixLength: 1
+          pathPrefixLength: 1,
+          twigTemplate: true
         },
         files: {
           'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123']

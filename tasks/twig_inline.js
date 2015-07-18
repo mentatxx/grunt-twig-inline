@@ -20,11 +20,14 @@ module.exports = function (grunt) {
         return !!ident;
     }
 
+    var twigLazyTemplate = "function __twigLazyTemplate(template) {var __instance;return function(context, params) {if (!__instance) {var tpl = twig({data: template});__instance = tpl.render.bind(tpl);}return __instance(context, params);};}\n";
+
     grunt.registerMultiTask('twig_inline', 'Include a pack of .twig templates as inline JS script', function () {
         // Merge task-specific and/or target-specific options with these defaults.
         var options = this.options({
             variablePrefix: '',
-            pathPrefixLength: 0
+            pathPrefixLength: 0,
+            twigTemplate: false
         });
         // Iterate over all specified file groups.
         this.files.forEach(function (f) {
@@ -44,13 +47,20 @@ module.exports = function (grunt) {
                     return '';
                 }
                 var escapedContent = jsEsc(grunt.file.read(filepath));
-                // Read file source.
-                return 'var '+options.variablePrefix+variableName+' = \''+escapedContent+'\';\n';
+                // Read file source
+                if (options.twigTemplate) {
+                    return 'var '+options.variablePrefix+variableName+' = __twigLazyTemplate(\''+escapedContent+'\');\n';
+                } else {
+                    return 'var '+options.variablePrefix+variableName+' = \''+escapedContent+'\';\n';
+                }
             }).filter(notEmpty).join('');
 
-            // Handle options.
             // Write the destination file.
-            grunt.file.write(f.dest, src);
+            if (options.twigTemplate) {
+                grunt.file.write(f.dest, twigLazyTemplate+src);
+            } else {
+                grunt.file.write(f.dest, src);
+            }
 
             // Print a success message.
             grunt.log.writeln('File "' + f.dest + '" created.');
