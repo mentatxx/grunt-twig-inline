@@ -37,46 +37,53 @@ grunt.initConfig({
 
 ### Options
 
-#### options.separator
+#### options.variablePrefix
 Type: `String`
 Default value: `',  '`
 
-A string value that is used to do something with whatever.
+Prefix string value that will be inserted before a variable name
 
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
+#### options.pathPrefixLength
+Type: `Integer`
+Default value: `0`
 
-A string value that is used to do something else with whatever else.
+How many path levels to cut
+
+#### options.twigTemplate
+Type: `Boolean`
+Default value: `false`
+
+Wrap imported content with twig render wrapper
 
 ### Usage Examples
 
 #### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+In this example, `dest/imported.js` is created. Two variables are declared with content of files `templates/first.twig` and `templates/second.twig`
 
 ```js
 grunt.initConfig({
   twig_inline: {
     options: {},
     files: {
-      'dest/default_options': ['src/testing', 'src/123'],
+      'dest/imported.js': ['templates/first.twig', 'templates/second.twig'],
     },
   },
 });
 ```
 
 #### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+In this example, `dest/imported.js` is created. Two variables are declared with prefix `twig`, cuted `templates` folder name, and content of files `templates/first.twig` and `templates/second.twig` wrapped in a lazy loader of twig render.
 
 ```js
 grunt.initConfig({
   twig_inline: {
     options: {
-      separator: ': ',
-      punctuation: ' !!!',
+      variablePrefix: 'twig',
+      pathPrefixLength: 1,
+      twigTemplate: true
     },
     files: {
-      'dest/default_options': ['src/testing', 'src/123'],
+      'dest/imported.js': ['templates/first.twig', 'templates/second.twig'],
     },
   },
 });
@@ -86,4 +93,4 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+0.1.0 - initial version: import files in .js variables, make lazy twig render wrapper

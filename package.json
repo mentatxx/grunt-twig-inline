@@ -1,7 +1,7 @@
 {
   "name": "grunt-twig-inline",
   "description": "Include a pack of .twig templates as inline JS script",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/mentatxx/grunt-twig-inline",
   "author": {
     "name": "Alexey Petushkov",

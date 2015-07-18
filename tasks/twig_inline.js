@@ -13,14 +13,18 @@ var jsEsc = require('jsesc');
 module.exports = function (grunt) {
 
     function filterIdentifier(ident) {
-        return /^[a-zA-Z0-9_-]+$/.test(ident);
+        return /^[a-zA-Z0-9_.-]+$/.test(ident);
     }
 
     function notEmpty(ident) {
         return !!ident;
     }
 
-    var twigLazyTemplate = "function __twigLazyTemplate(template) {var __instance;return function(context, params) {if (!__instance) {var tpl = twig({data: template});__instance = tpl.render.bind(tpl);}return __instance(context, params);};}\n";
+    function removeDots(ident) {
+        return ident.replace('.', '_');
+    }
+
+    var twigLazyTemplate = "function __twigLazyTemplate(id, template) {var __instance;return function(context, params) {if (!__instance) {var tpl = twig({id: id, data: template});__instance = tpl.render.bind(tpl);}return __instance(context, params);};}\n";
 
     grunt.registerMultiTask('twig_inline', 'Include a pack of .twig templates as inline JS script', function () {
         // Merge task-specific and/or target-specific options with these defaults.
@@ -42,14 +46,14 @@ module.exports = function (grunt) {
                 }
             }).map(function (filepath) {
                 // Generate variable name
-                var variableName = filepath.split(/[\/\\]/).slice(options.pathPrefixLength).filter(filterIdentifier).join('__');
+                var variableName = filepath.split(/[\/\\]/).slice(options.pathPrefixLength).filter(filterIdentifier).map(removeDots).join('__');
                 if (!variableName) {
                     return '';
                 }
                 var escapedContent = jsEsc(grunt.file.read(filepath));
                 // Read file source
                 if (options.twigTemplate) {
-                    return 'var '+options.variablePrefix+variableName+' = __twigLazyTemplate(\''+escapedContent+'\');\n';
+                    return 'var '+options.variablePrefix+variableName+' = __twigLazyTemplate(\''+variableName+'\', \''+escapedContent+'\');\n';
                 } else {
                     return 'var '+options.variablePrefix+variableName+' = \''+escapedContent+'\';\n';
                 }
